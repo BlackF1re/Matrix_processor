@@ -43,10 +43,11 @@ void sortNegativeRows(int** matrix, int row, int column)
                 {
                     matrix[i][k] = tempMatrix[k];
                 }
-                free(tempMatrix);
             }
         }
     }
+    free(tempMatrix);
+
 }
 
 void swapRows(int** matrix, int i, int j, int column)
@@ -101,7 +102,6 @@ int main()
     int isdigit = scanf_s("%d", &dimensity);
     if (isdigit != 1)
         error();
-
     int row, column;
     //матрица квадратная
     row = dimensity; 
@@ -123,7 +123,7 @@ int main()
 
     sortNegativeRows(matrix, row, column);
 
-    printf("\nSorted matrix:\n");
+    printf("\nСортированная матрица:\n");
     for (int i = 0; i < row; i++)
     {
         for (int j = 0; j < column; j++)
@@ -135,7 +135,7 @@ int main()
 
     sortRows(matrix, row, column);
 
-    printf("\nMatrix with rows sorted in descending order of maximum row elements:\n");
+    printf("\nМатрица со строками, отсортированными в порядке убывания максимального количества элементов строки:\n");
     for (int i = 0; i < row; i++)
     {
         for (int j = 0; j < column; j++)
@@ -144,5 +144,6 @@ int main()
         }
         printf("\n");
     }
+    free(matrix);
     return 0;
 }
