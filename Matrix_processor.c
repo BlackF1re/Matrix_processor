@@ -25,7 +25,7 @@ void insertionSort(int* arr, int size)
     }
 }
 
-void sortNegativeRows(int** matrix, int row, int column)
+void descendingRowSort(int** matrix, int row, int column)
 {
     int* tempMatrix = (int*)malloc(column * sizeof(int)); //временное  хранилище 
     for (int i = 0; i < row; i++)
@@ -47,7 +47,6 @@ void sortNegativeRows(int** matrix, int row, int column)
         }
     }
     free(tempMatrix);
-
 }
 
 void swapRows(int** matrix, int i, int j, int column)
@@ -97,19 +96,22 @@ void error()
 int main()
 {
     system("chcp 1251");
+
+    //создание динамической матрицы размерности A[n * n]
     int dimensity;
     printf("Введите размерность матрицы:\t");
     int isdigit = scanf_s("%d", &dimensity);
     if (isdigit != 1)
         error();
+
     int row, column;
-    //матрица квадратная
-    row = dimensity; 
+    row = dimensity;    //матрица квадратная
     column = dimensity;
     int** matrix = (int**)malloc(row * sizeof(int*));
     for (int i = 0; i < row; i++)
         matrix[i] = (int*)malloc(column * sizeof(int));
 
+    //заполнение матрицы целыми числами, заданными случайным образом
     srand(time(0));
     for (int i = 0; i < row; i++)
     {
@@ -121,9 +123,9 @@ int main()
         printf("\n");
     }
 
-    sortNegativeRows(matrix, row, column);
-
-    printf("\nСортированная матрица:\n");
+    //сортировка элементов в строках по убыванию
+    descendingRowSort(matrix, row, column);
+    printf("\nМатрица с сортированными по убыванию строками:\n");
     for (int i = 0; i < row; i++)
     {
         for (int j = 0; j < column; j++)
@@ -133,9 +135,9 @@ int main()
         printf("\n");
     }
 
+    //сортировка строк по максимальному элементу
     sortRows(matrix, row, column);
-
-    printf("\nМатрица со строками, отсортированными в порядке убывания максимального количества элементов строки:\n");
+    printf("\nМатрица со строками, отсортированными в порядке убывания их максимального значения:\n");
     for (int i = 0; i < row; i++)
     {
         for (int j = 0; j < column; j++)
@@ -143,6 +145,27 @@ int main()
             printf("%d ", matrix[i][j]);
         }
         printf("\n");
+    }
+
+    //поиск строк с отрицательными элементами
+    int** negative_rows = (int**)malloc(dimensity * sizeof(int*));
+    for (int i = 0; i < dimensity; i++)
+    {
+        for (int j = 0; j < dimensity; j++)
+        {
+            if (matrix[i][j] < 0)
+            {
+                negative_rows[i] = 1;
+                break;
+            }
+        }
+    }
+    for (int i = 0; i < dimensity; i++)
+    {
+        if (negative_rows[i] == 1)
+        {
+            printf("Row %d has negative elements\n", i);
+        }
     }
     free(matrix);
     return 0;
