@@ -1,16 +1,8 @@
-﻿/*Вариант 11.
-Написать программу, которая создает динамическую матрицу размерности
-A[n*n], элементы матрицы А – целые числа, заданные случайным образом. Найти строки, среди элементов которых есть
-отрицательные элементы.
-Изменить порядок строк матрицы: отсортировать строки матрицы по убыванию максимальных
-элементов строк. Использовать сортировку вставками.*/
-
-#include <math.h>
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
-void sort(double** matrix, double* keys, int N, int M)
+void sort(int** matrix, int* keys, int N, int M)
 {
     for (int i = 0; i < N - 1; ++i)
     {
@@ -24,10 +16,10 @@ void sort(double** matrix, double* keys, int N, int M)
         }
         if (max != i)
         {
-            double* tmp = matrix[max];
+            int* tmp = matrix[max];
             matrix[max] = matrix[i];
             matrix[i] = tmp;
-            double tmp_key = keys[max];
+            int tmp_key = keys[max];
             keys[max] = keys[i];
             keys[i] = tmp_key;
         }
