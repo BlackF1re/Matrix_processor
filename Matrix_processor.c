@@ -5,92 +5,45 @@ A[n*n], элементы матрицы А – целые числа, задан
 Изменить порядок строк матрицы: отсортировать строки матрицы по убыванию максимальных
 элементов строк. Использовать сортировку вставками.*/
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
-void insertionSort(int* arr, int size)
+void sort(double** matrix, double* keys, int N, int M)
 {
-    for (int i = 1; i < size; i++)
+    for (int i = 0; i < N - 1; ++i)
     {
-        int centralValue = arr[i];
-        int j = i - 1;
-
-        while (j >= 0 && arr[j] < centralValue)
+        int max = i;
+        for (int j = i + 1; j < M; ++j)
         {
-            arr[j + 1] = arr[j];
-            j = j - 1;
-        }
-        arr[j + 1] = centralValue;
-    }
-}
-
-void descendingRowSort(int** matrix, int row, int column)
-{
-    int* tempMatrix = (int*)malloc(column * sizeof(int)); //временное  хранилище 
-    for (int i = 0; i < row; i++)
-    {
-        for (int j = 0; j < column; j++)
-        {
-            if (matrix[i][j] < 0)
+            if (keys[j] > keys[max])
             {
-                for (int k = 0; k < column; k++)
-                {
-                    tempMatrix[k] = matrix[i][k];
-                }
-                insertionSort(tempMatrix, column);
-                for (int k = 0; k < column; k++)
-                {
-                    matrix[i][k] = tempMatrix[k];
-                }
+                max = j;
             }
         }
-    }
-    free(tempMatrix);
-}
-
-void swapRows(int** matrix, int i, int j, int column)
-{
-    for (int k = 0; k < column; k++)
-    {
-        int temp = matrix[i][k];
-        matrix[i][k] = matrix[j][k];
-        matrix[j][k] = temp;
-    }
-}
-
-void sortRows(int** matrix, int row, int column)
-{
-    for (int i = 0; i < row; i++)
-    {
-        for (int j = i + 1; j < row; j++)
+        if (max != i)
         {
-            if (findMax(matrix, row, column) == findMax(matrix, j, column))
-            {
-                swapRows(matrix, i, j, column);
-            }
+            double* tmp = matrix[max];
+            matrix[max] = matrix[i];
+            matrix[i] = tmp;
+            double tmp_key = keys[max];
+            keys[max] = keys[i];
+            keys[i] = tmp_key;
         }
     }
 }
 
-int findMax(int** matrix, int row, int column)
+void print(int dimensity, int** matrix)
 {
-    int max = matrix[0][0];
-    for (int i = 0; i < row; i++)
+    for (int i = 0; i < dimensity; i++)
     {
-        for (int j = 0; j < column; j++)
+        for (int j = 0; j < dimensity; j++)
         {
-            if (matrix[i][j] > max)
-                max = matrix[i][j];
+            printf("%d ", matrix[i][j]);
         }
+        printf("\n");
     }
-    return max;
-}
-
-void error()
-{
-    printf("Вы все сломали. В следующий раз вводите корректные значения.");
-    exit(1);
 }
 
 int main()
@@ -99,74 +52,74 @@ int main()
 
     //создание динамической матрицы размерности A[n * n]
     int dimensity;
-    printf("Введите размерность матрицы:\t");
-    int isdigit = scanf_s("%d", &dimensity);
-    if (isdigit != 1)
-        error();
-
-    int row, column;
-    row = dimensity;    //матрица квадратная
-    column = dimensity;
-    int** matrix = (int**)malloc(row * sizeof(int*));
-    for (int i = 0; i < row; i++)
-        matrix[i] = (int*)malloc(column * sizeof(int));
-
-    //заполнение матрицы целыми числами, заданными случайным образом
-    srand(time(0));
-    for (int i = 0; i < row; i++)
+    printf("Введите размерность матрицы: ");
+    int isDigit = scanf_s("%d", &dimensity);
+    if (isDigit != 1)
     {
-        for (int j = 0; j < column; j++)
+        printf("Вы все сломали. В следующий раз вводите корректные значения.");
+        exit(1);
+    }
+    int** matrix = (int**)malloc(dimensity * sizeof(int*));
+
+    //Заполнение матрицы А целыми числами, заданными случайным образом
+    srand(time(0));
+    for (int i = 0; i < dimensity; i++)
+    {
+        matrix[i] = (int*)malloc(dimensity * sizeof(int));
+        for (int j = 0; j < dimensity; j++)
         {
             matrix[i][j] = rand() % 20 - 10;
-            printf("%d ", matrix[i][j]);
         }
-        printf("\n");
     }
 
-    //сортировка элементов в строках по убыванию
-    descendingRowSort(matrix, row, column);
-    printf("\nМатрица с сортированными по убыванию строками:\n");
-    for (int i = 0; i < row; i++)
-    {
-        for (int j = 0; j < column; j++)
-        {
-            printf("%d ", matrix[i][j]);
-        }
-        printf("\n");
-    }
+    //Вывод исходной матрицы
+    printf("\nИсходная матрица:\n");
+    print(dimensity, matrix);
 
-    //сортировка строк по максимальному элементу
-    sortRows(matrix, row, column);
-    printf("\nМатрица со строками, отсортированными в порядке убывания их максимального значения:\n");
-    for (int i = 0; i < row; i++)
-    {
-        for (int j = 0; j < column; j++)
-        {
-            printf("%d ", matrix[i][j]);
-        }
-        printf("\n");
-    }
-
-    //поиск строк с отрицательными элементами
-    int** negative_rows = (int**)malloc(dimensity * sizeof(int*));
+    //Поиск строк с отрицательными элементами
+    int* zero_rows = (int*)malloc(dimensity * sizeof(int));
     for (int i = 0; i < dimensity; i++)
     {
         for (int j = 0; j < dimensity; j++)
         {
             if (matrix[i][j] < 0)
             {
-                negative_rows[i] = 1;
+                zero_rows[i] = 1;
                 break;
             }
         }
     }
+
+    printf("\nИндексы строк, содержащих отрицательные значения:");
     for (int i = 0; i < dimensity; i++)
     {
-        if (negative_rows[i] == 1)
+        if (zero_rows[i] == 1)
         {
-            printf("Row %d has negative elements\n", i);
+            printf("\t%d", i);
         }
     }
+
+    //Поиск максимальных элементов в строках
+    int* max = (int*)malloc(dimensity * sizeof(int));
+    for (int i = 0; i < dimensity; i++)
+    {
+        max[i] = matrix[i][0];
+        for (int j = 1; j < dimensity; j++)
+        {
+            if (matrix[i][j] > max[i])
+            {
+                max[i] = matrix[i][j];
+            }
+        }
+    }
+
+    //сортировка строк матрицы по убыванию максимальных элементов строк
+    sort(matrix, max, dimensity, dimensity);
+    printf("\n\nСортированная матрица:\n");
+    print(dimensity, matrix);
+
     free(matrix);
+    free(max);
+    free(zero_rows);
     return 0;
 }
