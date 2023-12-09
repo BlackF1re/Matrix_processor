@@ -4,12 +4,12 @@
 #include <conio.h>
 #include <windows.h>
 
-void sort(int** matrix, int* keys, int N, int M)
+void sort(int** matrix, int* keys, int dimensity)
 {
-    for (int i = 0; i < N - 1; ++i)
+    for (int i = 0; i < dimensity - 1; ++i)
     {
         int max = i;
-        for (int j = i + 1; j < M; ++j)
+        for (int j = i + 1; j < dimensity; ++j)
         {
             if (keys[j] > keys[max])
             {
@@ -108,7 +108,7 @@ int main()
     }
 
     //сортировка строк матрицы по убыванию максимальных элементов строк
-    sort(matrix, max, dimensity, dimensity);
+    sort(matrix, max, dimensity);
     printf("\n\nСортированная матрица:\n");
     print(dimensity, matrix);
     _getch();
