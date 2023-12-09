@@ -1,6 +1,8 @@
 ﻿#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <conio.h>
+#include <windows.h>
 
 void sort(int** matrix, int* keys, int N, int M)
 {
@@ -40,7 +42,7 @@ void print(int dimensity, int** matrix)
 
 int main()
 {
-    system("chcp 1251");
+    SetConsoleOutputCP(1251);
 
     //создание динамической матрицы размерности A[n * n]
     int dimensity;
@@ -109,7 +111,7 @@ int main()
     sort(matrix, max, dimensity, dimensity);
     printf("\n\nСортированная матрица:\n");
     print(dimensity, matrix);
-
+    _getch();
     free(matrix);
     free(max);
     free(zero_rows);
